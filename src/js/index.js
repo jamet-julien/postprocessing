@@ -40,7 +40,11 @@ async function init(){
   render = await createRender( canvas, {
     vertexShader   : './src/glsl/vertexShader.glsl',
     fragmentShader : './src/glsl/fragmentShader.glsl'
-  });
+  }, 'position');
+  render = await createRender( canvas, {
+    vertexShader   : './src/glsl/vertexShader.glsl',
+    fragmentShader : './src/glsl/fragmentShader.glsl'
+  }, "a_position", "a_texCoord");
 
   draw(0);
 }
