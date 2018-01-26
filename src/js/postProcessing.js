@@ -17,7 +17,7 @@ function createShader( gl, type, source) {
 }
 
 function createProgram(gl, srcVertex, srcFrag) {
-  let vertexShader = createShader(gl, gl.VERTEX_SHADER, srcVertex);
+  let vertexShader   = createShader(gl, gl.VERTEX_SHADER, srcVertex);
   let fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, srcFrag);
 
   let  program = gl.createProgram();
@@ -66,7 +66,7 @@ function setRectangle(gl, x, y, width, height) {
   ]), gl.STATIC_DRAW);
 }
 
-export function createRender( canvas, { vertexShader, fragmentShader}, ...variable){
+export function createRender( canvas, { vertexShader, fragmentShader}){
 
   return Promise.all([
       fetch( vertexShader),
@@ -75,15 +75,15 @@ export function createRender( canvas, { vertexShader, fragmentShader}, ...variab
   .then(([ proVertex, proFrag]) => Promise.all( [ proVertex.text(), proFrag.text()]))
   .then(([ srcVertex, srcFrag]) =>{
 
-    const webgl = document.createElement("canvas");
+    const webgl  = document.createElement("canvas");
     webgl.width  = canvas.width;
     webgl.height = canvas.height;
 
     const gl = webgl.getContext('webgl');
 
     gl.viewport( 0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-    gl.clearColor( 0.0, 0.0, 0.0, 0.0);
-    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.clearColor( 0.0, 0.0, 0.0, 1.0);
+    gl.clear( gl.COLOR_BUFFER_BIT);
 
     if( !gl){
       gl = canvas.getContext('experimental-webgl');
@@ -102,18 +102,19 @@ export function createRender( canvas, { vertexShader, fragmentShader}, ...variab
     // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     // Set a rectangle the same size as the image.
-    setRectangle(gl, 0, 0, canvas.width, canvas.height);
+    setRectangle( gl, 0, 0, canvas.width, canvas.height);
 
     // provide texture coordinates for the rectangle.
     var texcoordBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-      0.0, 0.0,
-      1.0, 0.0,
-      0.0, 1.0,
-      0.0, 1.0,
-      1.0, 0.0,
-      1.0, 1.0,
+      0.0, 0.0,//  ____
+      1.0, 0.0,//  | /
+      0.0, 1.0,//  |/
+
+      0.0, 1.0,//     /|
+      1.0, 0.0,//    / |
+      1.0, 1.0,//   ----
     ]), gl.STATIC_DRAW);
 
     // Create a texture.
@@ -148,34 +149,34 @@ export function createRender( canvas, { vertexShader, fragmentShader}, ...variab
     gl.enableVertexAttribArray(positionLocation);
 
     // Bind the position buffer.
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
     // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-    var size = 2;          // 2 components per iteration
-    var type = gl.FLOAT;   // the data is 32bit floats
-    var normalize = false; // don't normalize the data
-    var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-    var offset = 0;        // start at the beginning of the buffer
+    var size      = 2;        // 2 components per iteration
+    var type      = gl.FLOAT; // the data is 32bit floats
+    var normalize = false;    // don't normalize the data
+    var stride    = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+    var offset    = 0;        // start at the beginning of the buffer
     gl.vertexAttribPointer(
       positionLocation, size, type, normalize, stride, offset)
 
     // Turn on the teccord attribute
-    gl.enableVertexAttribArray(texcoordLocation);
+    gl.enableVertexAttribArray( texcoordLocation);
 
     // Bind the position buffer.
     gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
 
     // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-    var size = 2;          // 2 components per iteration
-    var type = gl.FLOAT;   // the data is 32bit floats
-    var normalize = false; // don't normalize the data
-    var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-    var offset = 0;        // start at the beginning of the buffer
+    var size      = 2;         // 2 components per iteration
+    var type      = gl.FLOAT;  // the data is 32bit floats
+    var normalize = false;     // don't normalize the data
+    var stride    = 0;         // 0 = move forward size * sizeof(type) each iteration to get the next position
+    var offset    = 0;         // start at the beginning of the buffer
     gl.vertexAttribPointer(
       texcoordLocation, size, type, normalize, stride, offset)
 
     // set the resolution
-    gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
+    gl.uniform2f( resolutionLocation, gl.canvas.width, gl.canvas.height);
 
 
 /****************************************************/

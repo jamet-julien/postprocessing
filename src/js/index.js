@@ -1,7 +1,7 @@
 import { createRender} from './postProcessing.js';
 
 const canvas     = document.getElementById("space_deux"),
-context2d = canvas.getContext('2d');
+       context2d = canvas.getContext('2d');
 
 canvas.width  = 800;
 canvas.height = 600;
@@ -18,8 +18,8 @@ function draw(){
   pos.x = ( pos.x +1)% canvas.width;
   pos.y = ( pos.y +1)% canvas.height;
 
-  context2d.fillStyle = "red";
-  context2d.fillRect( pos.x,  pos.y, 20, 20);
+  context2d.fillStyle = "#000";
+  context2d.fillRect( pos.x,  pos.y, 100, 100);
 
   context2d.drawImage(
       render.draw(),
@@ -40,11 +40,7 @@ async function init(){
   render = await createRender( canvas, {
     vertexShader   : './src/glsl/vertexShader.glsl',
     fragmentShader : './src/glsl/fragmentShader.glsl'
-  }, 'position');
-  render = await createRender( canvas, {
-    vertexShader   : './src/glsl/vertexShader.glsl',
-    fragmentShader : './src/glsl/fragmentShader.glsl'
-  }, "a_position", "a_texCoord");
+  });
 
   draw(0);
 }
