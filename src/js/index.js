@@ -18,8 +18,10 @@ function draw(){
   pos.x = ( pos.x +1)% canvas.width;
   pos.y = ( pos.y +1)% canvas.height;
 
-  context2d.fillStyle = "#000";
+  context2d.fillStyle   = "#000";
+  context2d.strokeStyle = "#FFF";
   context2d.fillRect( pos.x,  pos.y, 100, 100);
+  context2d.strokeRect(pos.x, pos.y, 100, 100);
 
   context2d.drawImage(
       render.draw(),
